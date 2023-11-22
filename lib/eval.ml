@@ -1,13 +1,11 @@
 open Stlc_lib
 
-exception Stuck
-
 let rec eval = function
-  | Var x -> Var x
+  | Var x -> failwith "Unexpected free variable!"
   | Abs (x, b) -> Abs (x, b)
   | App (f, e) -> match eval f with
     | Abs (x, b) -> eval @@ subst (e, x) b
-    | _ -> raise Stuck
+    | _ -> failwith "Cannot apply a non-abstraction!"
 
 let rec flatten = function
   | Base -> Base
